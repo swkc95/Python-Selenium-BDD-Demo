@@ -44,6 +44,7 @@ While serving as a comprehensive solution for simple, local tests, this demo cou
    ```
 
 4. Ensure that your Chrome browser is installed and up to date.
+5. Set your browser's language to "English (United States)". Otherwise two tests will fail on some string checks.
 
 
 ## Usage
