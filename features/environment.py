@@ -1,7 +1,7 @@
 from behave import fixture
 from behave.fixture import use_fixture
 from behave.contrib.scenario_autoretry import patch_scenario_with_autoretry
-from fixtures.driver import get_local_driver, get_remote_driver
+from fixtures.driver import get_local_driver
 from lib.misc.string_importer import import_string_file
 import lib.misc.variables as v
 
