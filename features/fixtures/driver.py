@@ -20,6 +20,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 def get_local_driver(context):
     if context.used_browser.lower() == "chrome":
         options = webdriver.ChromeOptions()
+        options.add_argument("--lang=en-us")
         if context.debug:
             options.add_experimental_option("detach", True)
         if context.headless:
