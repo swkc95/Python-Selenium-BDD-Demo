@@ -8,6 +8,9 @@ API_ROOM_ENDPOINT = "/room/"
 API_BOOKING_ENDPOINT = "/booking/"
 API_MESSAGES_ENDPOINT = "/message/"
 
+# Selenium Grid URL
+GRID_URL = "http://localhost:4444"
+
 # should be hidden
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "password"
