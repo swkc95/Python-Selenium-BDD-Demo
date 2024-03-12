@@ -1,5 +1,5 @@
 # Python Selenium BDD Demo
-This project showcases basic capabilities of Selenium with Behave (BDD) framework, using the [Restful Booker Platform](https://automationintesting.online/) as its target. It also implements BehaveX for HTML reports and parallel test execution, along with API requests for creating test data.
+This project showcases basic capabilities of Selenium with Behave (BDD) framework, using the [Restful Booker Platform](https://automationintesting.online/) as its target. It also implements BehaveX for HTML reports and parallel test execution, contains basic Selenium Grid infrastructure and uses API requests for creating test data.
 
 ## Table of Contents
 - [Features](#features)
@@ -30,8 +30,11 @@ BehaveX, in addition to parallel test execution, also provides elegant, "busines
 ### API requests
 API requests, provided by the popular Python "requests" library, were utilized to generate test data and further validate some of the application's behavior. Creating test data, such as user accounts, orders, and products, via API, could shorten test execution time and allow scenarios to focus on the tested feature itself without redundant steps. Using API requests also adheres to the principle of test isolation, where each test operates on separate products of the application (e.g., accounts, orders). Additionally, in some cases where the environment might become quickly cluttered during the test suite itself, API requests can be part of a "cleanup" procedure, deleting unused test assets after the test has ended. This would come at the cost of losing some data useful for debugging the application and test cases themselves, but with excessive logging mechanisms and screenshot capture, that issue could be mitigated.
 
+### Selenium Grid support
+A simple Selenium Grid setup has been added to the project to demonstrate the possibility of running tests through remote machines. The current Selenium Grid implementation is intentionally minimal and was designed to run locally with Docker support, utilizing two slots for concurrent tests. Configuration is stored in docker-compose.yml, and the same file is used to quickly set up all necessary containers.
+
 ### Base for further development 
-While serving as a comprehensive solution for simple, local tests, this demo could serve as a template for a larger project. It includes stubs for features such as multilingual tests (loading files with language strings and testing the same app with different language versions), multiple browser support (Chrome, Firefox, Edge), Selenium Grid (launching tests in a dockerized grid, via a local machine, or as part of CI/CD pipelines), and more. If you come across this project, feel free to experiment on your own and enhance it as you see fit.
+While serving as a comprehensive solution for simple, local tests, this demo could serve as a template for a larger project. It includes stubs for features such as multilingual tests (loading files with language strings and testing the same app with different language versions), multiple browser support (Chrome, Firefox, Edge), remote Selenium Grid (launching tests in a grid as a part of CI/CD pipelines), and more.
 
 ## Installation
 
@@ -44,10 +47,15 @@ While serving as a comprehensive solution for simple, local tests, this demo cou
    ```
 
 4. Ensure that your Chrome browser is installed and up to date.
+5. (optional) Install and launch Docker for Selenium Grid support.
 
 ## Usage
 ### Running tests on a local machine
 Run `behavex --parallel-processes 2 --parallel-scheme scenario` to launch the full test suite. It will run tests in 2 parallel processes, in headless mode. An HTML report with detailed test metrics will be stored as `output/report.html` in the project directory. 
+
+### Running tests in Selenium Grid
+Run `docker-compose -f docker-compose.yml up` in the project directory on your local machine to start the Selenium Grid hub and a single Chrome node with 2 slots for concurrent tests.
+Add `-D runner_mode="grid"` as an additional argument when starting the test suite to switch to the Selenium Grid execution.
 
 #### Using tags
 `-t <tag names>` - Adding `-t @customer` or `-t @admin` will only launch test scenarios specific to customer or admin. See Behave documentation for further tag usage.
@@ -63,5 +71,3 @@ Run `behavex --parallel-processes 2 --parallel-scheme scenario` to launch the fu
 `-D language=<string>` - default `english`. Selects a file with language strings, for various assertions and checks. Strings for all code are stored in a single file, allowing running the same tests on different language versions of the tested application.
 
 `-D browser=<string>` - default `chrome`. Selects a browser to run tests on. Selenium supports Firefox (geckodriver) and Edge (msedgedriver), both could be implemented as a choice in `driver.py` file. For this project I have used Chrome as a default choice, due to the convenience.
-
-`-D runner_mode=<string>` - default `local`. This project could also run in CI/CD or directly on the Selenium Grid in the future. For this moment I have not created a whole infrastructure for these yet.
