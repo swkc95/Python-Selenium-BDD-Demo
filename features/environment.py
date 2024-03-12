@@ -1,7 +1,7 @@
 from behave import fixture
 from behave.fixture import use_fixture
 from behave.contrib.scenario_autoretry import patch_scenario_with_autoretry
-from fixtures.driver import get_local_driver
+from fixtures.driver import get_local_driver, get_remote_driver
 from lib.misc.string_importer import import_string_file
 import lib.misc.variables as v
 
@@ -10,11 +10,10 @@ def before_all(context):
     context.retries = context.config.userdata.getint("retries", 0)
     context.headless = context.config.userdata.getbool("headless", True)
     context.debug = context.config.userdata.getbool("debug", False)
+    context.runner_mode = context.config.userdata.get("runner_mode", "local")
     # context.language = context.config.userdata.get("language", "english")
-    # context.runner_mode = context.config.userdata.get("runner_mode", "local")
     # context.used_browser = context.config.userdata.get("browser", "chrome")
     context.language = "english"
-    context.runner_mode = "local"
     context.used_browser = "chrome"
     context.strings = import_string_file(context.language)
 
@@ -35,16 +34,16 @@ def browser_fixture(context):
         context.browser = get_local_driver(context)
         context.browser.maximize_window()
         yield context.browser
-    # else:
-    #     if context.runner_mode == "cicd":
-    #         exec_url = v.CICD_URL
-    #     elif context.runner_mode == "grid":
-    #         exec_url = v.GRID_URL
-    #     else:
-    #         return ValueError("Invalid runner_mode")
-    #     context.browser = get_remote_driver(context, exec_url)
-    #     yield context.browser
-    #     context.browser.quit()
+    else:
+        if context.runner_mode == "grid":
+            exec_url = v.GRID_URL
+        # elif context.runner_mode == "cicd":
+        #     exec_url = v.CICD_URL
+        else:
+            return ValueError("Invalid runner_mode")
+        context.browser = get_remote_driver(context, exec_url)
+        yield context.browser
+        context.browser.quit()
 
 
 def before_tag(context, tag):
